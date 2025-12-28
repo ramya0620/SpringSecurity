@@ -3,11 +3,9 @@ package com.vedget.funschool.service;
 
 import com.vedget.funschool.model.Contact;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
 import org.springframework.web.context.annotation.ApplicationScope;
-import org.springframework.web.context.annotation.RequestScope;
-import org.springframework.web.context.annotation.SessionScope;
+
 
 /*
 @Slf4j, is a Lombok-provided annotation that will automatically generate an SLF4J
@@ -33,7 +31,7 @@ public class ContactService {
      */
     public boolean saveMessageDetails(Contact contact){
         boolean isSaved = true;
-        //TODO - Need to persist the data into the DB table
+        // Need to persist the data into the DB table
         log.info(contact.toString());
         return isSaved;
     }
