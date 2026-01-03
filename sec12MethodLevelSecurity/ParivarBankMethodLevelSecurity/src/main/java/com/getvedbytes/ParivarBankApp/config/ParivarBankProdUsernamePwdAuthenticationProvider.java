@@ -1,6 +1,6 @@
 package com.getvedbytes.ParivarBankApp.config;
 
-import lombok.AllArgsConstructor;
+
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Profile;
 import org.springframework.security.authentication.AuthenticationProvider;

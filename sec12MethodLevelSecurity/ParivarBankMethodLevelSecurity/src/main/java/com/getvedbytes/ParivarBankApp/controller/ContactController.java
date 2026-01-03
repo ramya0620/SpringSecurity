@@ -2,10 +2,8 @@ package com.getvedbytes.ParivarBankApp.controller;
 
 import com.getvedbytes.ParivarBankApp.model.Contact;
 import com.getvedbytes.ParivarBankApp.repository.ContactRepository;
-import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreFilter;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -22,9 +20,11 @@ public class ContactController {
     @PostMapping("/contact")
     @PreFilter("filterObject.contactname!='test'")
     public Contact saveContactInquiryDetails(@RequestBody List<Contact> contacts){
-        Contact contact=contacts.getFirst();
-        if(contact!=null){contact.setContactId(getServiceReqNumber());
-        contact.setCreateDt(new Date(System.currentTimeMillis()));
+
+        if(!contacts.isEmpty()){
+            Contact contact=contacts.getFirst();
+            contact.setContactId(getServiceReqNumber());
+            contact.setCreateDt(new Date(System.currentTimeMillis()));
         return contactRepository.save(contact);
     }else{
             return null;

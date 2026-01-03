@@ -1,18 +1,20 @@
 package com.getvedbytes.ParivarBankApp.model;
 
 
+import com.fasterxml.jackson.annotation.JsonAnySetter;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
+import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
+
 
 import java.util.Date;
 import java.util.Set;
 
 @Entity
-@Getter
-@Setter
+@Getter @Setter
 public class Customer {
         @Id
         @GeneratedValue(strategy = GenerationType.IDENTITY)

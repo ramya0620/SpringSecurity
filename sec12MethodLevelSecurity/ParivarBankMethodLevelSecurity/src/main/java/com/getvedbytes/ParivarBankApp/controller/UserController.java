@@ -30,7 +30,7 @@ import static org.springframework.boot.logging.log4j2.Log4J2LoggingSystem.getEnv
 @RequiredArgsConstructor
 public class UserController {
 
-   // CustomersRepository customersRepository;
+    // CustomersRepository customersRepository;
     private final PasswordEncoder passwordEncoder;
     private final CustomerRepository customerRepository;
     private final AuthenticationManager authenticationManager;
@@ -38,54 +38,55 @@ public class UserController {
 
 
     @PostMapping("/register")
-    public ResponseEntity<String> registerUser(@RequestBody Customer customers){
-        try{
-            String hashpwd=passwordEncoder.encode(customers.getPwd());
+    public ResponseEntity<String> registerUser(@RequestBody Customer customers) {
+        try {
+            String hashpwd = passwordEncoder.encode(customers.getPwd());
             customers.setPwd(hashpwd);
             customers.setCreateDt(new Date(System.currentTimeMillis()));
-            Customer savedCustomers=customerRepository.save(customers);
+            Customer savedCustomers = customerRepository.save(customers);
 
-            if(savedCustomers.getId()>0){
+            if (savedCustomers.getId() > 0) {
                 return ResponseEntity.status(HttpStatus.CREATED).
                         body("Given User deatils are Successfully registered");
-            }else{
+            } else {
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).
                         body("User registration failed");
             }
-        }catch(Exception ex){
+        } catch (Exception ex) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).
-                    body("An exception occoured "+ex.getMessage());
+                    body("An exception occoured " + ex.getMessage());
         }
     }
 
     @GetMapping("/user")
-    public Customer getUserDeatilsAfterLogin(Authentication authentication){
-        Optional<Customer> optionalCustomer=customerRepository.findByEmail(authentication.getName());
+    public Customer getUserDeatilsAfterLogin(Authentication authentication) {
+        Optional<Customer> optionalCustomer = customerRepository.findByEmail(authentication.getName());
         return optionalCustomer.orElse(null);
     }
+
     @PostMapping("/apiLogin")
-    public ResponseEntity<LoginResponseDTO> apiLogin(@RequestBody LoginRequestDTO loginRequestDTO){
-        String jwt="";
-       Authentication authentication= UsernamePasswordAuthenticationToken.unauthenticated(loginRequestDTO.username(),loginRequestDTO.password());
-       Authentication authentication1=authenticationManager.authenticate(authentication);
-       if(authentication1!=null || authentication1.isAuthenticated()){
+    public ResponseEntity<LoginResponseDTO> apiLogin(@RequestBody LoginRequestDTO loginRequestDTO) {
+        String jwt = "";
+        Authentication authentication = UsernamePasswordAuthenticationToken.unauthenticated(loginRequestDTO.username(), loginRequestDTO.password());
+        Authentication authentication1 = authenticationManager.authenticate(authentication);
+        if (authentication1 != null || authentication1.isAuthenticated()) {
 
-               if(env!=null){
-                   String secret=env.getProperty(ApplicationConstants.JWT_SECRET_KEY,ApplicationConstants.JWT_SECRET_DEFAULT_VALUE);
-                   SecretKey secretKey= Keys.hmacShaKeyFor(secret.getBytes(StandardCharsets.UTF_8));
-                   String jwtToken=  Jwts.builder().issuer("ParivarBank").
-                           subject("JwtToken").
-                           claim("username",authentication1.getName()).
-                           claim("authorities",authentication1.getAuthorities().stream().
-                                   map(GrantedAuthority::getAuthority).collect(Collectors.joining(","))).
-                           issuedAt(new java.util.Date()).
-                           expiration(new java.util.Date(new java.util.Date().getTime()+300000)).signWith(secretKey).compact();
-               }
+            if (env != null) {
+                String secret = env.getProperty(ApplicationConstants.JWT_SECRET_KEY, ApplicationConstants.JWT_SECRET_DEFAULT_VALUE);
+                SecretKey secretKey = Keys.hmacShaKeyFor(secret.getBytes(StandardCharsets.UTF_8));
+                String jwtToken = Jwts.builder().issuer("ParivarBank").
+                        subject("JwtToken").
+                        claim("username", authentication1.getName()).
+                        claim("authorities", authentication1.getAuthorities().stream().
+                                map(GrantedAuthority::getAuthority).collect(Collectors.joining(","))).
+                        issuedAt(new java.util.Date()).
+                        expiration(new java.util.Date(new java.util.Date().getTime() + 300000)).signWith(secretKey).compact();
+            }
 
-           }
-        return ResponseEntity.status(HttpStatus.OK).header(ApplicationConstants.JWT_AUTH_HEADER,jwt).
+        }
+        return ResponseEntity.status(HttpStatus.OK).header(ApplicationConstants.JWT_AUTH_HEADER, jwt).
                 body(new LoginResponseDTO(HttpStatus.OK.getReasonPhrase(), jwt));
-       }
-
     }
+
+}
 
