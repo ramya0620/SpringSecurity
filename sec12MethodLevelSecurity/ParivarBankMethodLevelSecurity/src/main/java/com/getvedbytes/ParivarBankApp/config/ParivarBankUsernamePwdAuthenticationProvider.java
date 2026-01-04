@@ -18,7 +18,6 @@ import java.util.List;
 
 @Component
 @Profile("!prod")
-//@Profile("default")
 @RequiredArgsConstructor
 public class ParivarBankUsernamePwdAuthenticationProvider implements AuthenticationProvider {
 

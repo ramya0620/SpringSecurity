@@ -84,10 +84,11 @@ public class ProjectSecurityProdConfig {
     PasswordEncoder passwordEncoder(){
         return PasswordEncoderFactories.createDelegatingPasswordEncoder();
     }
-        @Bean
-        public CompromisedPasswordChecker compromisedPasswordChecker(){
-            return new HaveIBeenPwnedRestApiPasswordChecker();
-        }
+
+    @Bean
+    public CompromisedPasswordChecker compromisedPasswordChecker(){
+        return new HaveIBeenPwnedRestApiPasswordChecker();
+    }
 
     @Bean
     AuthenticationManager authenticationManager(UserDetailsService userDetailsService,
