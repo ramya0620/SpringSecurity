@@ -3,12 +3,14 @@ package com.getvedbytes.ParivarBankApp.controller;
 import com.getvedbytes.ParivarBankApp.model.Contact;
 import com.getvedbytes.ParivarBankApp.repository.ContactRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.access.prepost.PostFilter;
 import org.springframework.security.access.prepost.PreFilter;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.sql.Date;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
@@ -18,17 +20,18 @@ public class ContactController {
 
     private final ContactRepository contactRepository;
     @PostMapping("/contact")
-    @PreFilter("filterObject.contactname!='test'")
-    public Contact saveContactInquiryDetails(@RequestBody List<Contact> contacts){
-
+    //@PreFilter("filterObject.contactname!='test'")
+    @PostFilter(("filterObject.contactname!='test'"))
+    public List<Contact> saveContactInquiryDetails(@RequestBody List<Contact> contacts){
+        List<Contact> returnContacts=new ArrayList<>();
         if(!contacts.isEmpty()){
             Contact contact=contacts.getFirst();
             contact.setContactId(getServiceReqNumber());
             contact.setCreateDt(new Date(System.currentTimeMillis()));
-        return contactRepository.save(contact);
-    }else{
-            return null;
-        }
+            Contact savedContacts=contactRepository.save(contact);
+             returnContacts.add(savedContacts);
+    }
+            return returnContacts;
     }
     public String getServiceReqNumber(){
         Random random =new Random();
